@@ -10,6 +10,8 @@ const router = express.Router();
 // Import database models
 const { Student, Campus } = require('../database/models');
 
+const asyncHandler = require('express-async-handler');
+
 // Import a middleware to replace "try and catch" for request handler, for a concise coding (fewer lines of code)
 const ash = require('express-async-handler');
 
@@ -40,11 +42,11 @@ router.get('/:id', ash(async(req, res) => {
 }));
 
 /* ADD NEW STUDENT */
-router.post('/', function(req, res, next) {
-  Student.create(req.body)
-    .then(createdStudent => res.status(200).json(createdStudent))
-    .catch(err => next(err));
-});
+router.post('/', asyncHandler(async(req, res) => {
+
+  let newStudent = await Student.create(req.body);
+  res.status(201).json(newStudent);
+}));
 
 /* DELETE STUDENT */
 router.delete('/:id', function(req, res, next) {
