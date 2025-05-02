@@ -15,7 +15,30 @@ const Student = db.define("student", {
   lastname: {
     type: Sequelize.STRING,
     allowNull: false
-  }
+  },
+
+  email: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
+    validate: {
+      isEmail: true
+    }
+  },
+
+  image_url: {
+    type: Sequelize.STRING,
+    defaultValue: "https://static.vecteezy.com/system/resources/thumbnails/026/911/382/small_2x/happy-student-boy-with-books-isolated-free-photo.jpg",
+  },
+
+  gpa: {
+    type: Sequelize.DECIMAL(3, 1),
+    validate: {
+      min: 0.00,
+      max: 4.00
+    }
+  },
+
 });
 
 // Export the student model
