@@ -55,7 +55,12 @@ router.delete('/:id', ash(async(req, res) => {
 
 /* ADD NEW CAMPUS */
 router.post('/', ash(async(req, res) => {
-  let newCampus = await Campus.create(req.body);
+  let campusData = {...req.body};
+  if (campusData.image_url === "") {
+    campusData.image_url = "https://www.travelandleisure.com/thmb/4i9gLewM45kVsDGloXO5Z9wKlfk=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/notre-dame-university-COLLEGECAMP0421-039ce0bfd40b4e429b825c6fb6ebfaa6.jpg";
+    delete campusData.image_url;
+  }
+  let newCampus = await Campus.create(campusData);
   res.status(200).json(newCampus);  // Status code 200 OK - request succeeded
 }));
 
