@@ -42,10 +42,25 @@ router.get('/:id', ash(async(req, res) => {
 }));
 
 /* ADD NEW STUDENT */
-router.post('/', asyncHandler(async(req, res) => {
+router.post('/', asyncHandler(async (req, res) => {
+  const { campusId } = req.body;
 
-  let newStudent = await Student.create(req.body);
-  res.status(201).json(newStudent);
+  if (campusId !== null && campusId !== undefined && campusId !== "") {
+    const campus = await Campus.findByPk(campusId);
+    if (!campus) {
+      return res.status(400).json({ message: `Campus with ID ${campusId} not found.` });
+    }
+  }
+
+  try {
+    let newStudent = await Student.create(req.body);
+    res.status(201).json(newStudent);
+  } catch (error) {
+    if (error.name === 'SequelizeValidationError') {
+      return res.status(400).json({ message: error.errors.map(e => e.message).join(', ') });
+    }
+    throw error; 
+  }
 }));
 
 /* DELETE STUDENT */
